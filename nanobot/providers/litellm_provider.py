@@ -338,3 +338,38 @@ class LiteLLMProvider(LLMProvider):
     def get_default_model(self) -> str:
         """Get the default model."""
         return self.default_model
+
+    async def embed(self, texts: list[str], model: str | None = None) -> list[list[float]]:
+        """Generate embeddings via LiteLLM."""
+        # Default to Gemini for embeddings if not specified
+        model = model or "gemini/gemini-embedding-001"
+        
+        kwargs: dict[str, Any] = {
+            "model": model,
+            "input": texts,
+        }
+        
+        # If we are using Gemini, we must ensure the Gemini API key is passed
+        # even if the main provider is DeepSeek.
+        if "gemini" in model:
+            from nanobot.config.loader import load_config
+            cfg = load_config()
+            if cfg.providers.gemini.api_key:
+                kwargs["api_key"] = cfg.providers.gemini.api_key
+            elif self.api_key and "gemini" in (self.default_model or ""):
+                kwargs["api_key"] = self.api_key
+        else:
+            if self.api_key:
+                kwargs["api_key"] = self.api_key
+            if self.api_base:
+                kwargs["api_base"] = self.api_base
+
+        if self.extra_headers:
+            kwargs["extra_headers"] = self.extra_headers
+
+        try:
+            response = await litellm.aembedding(**kwargs)
+            return [data["embedding"] for data in response.data]
+        except Exception as e:
+            logger.error("Error generating embeddings with {}: {}", model, e)
+            return []

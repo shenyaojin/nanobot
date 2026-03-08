@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import json
+import numpy as np
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from loguru import logger
 
@@ -34,21 +35,78 @@ _SAVE_MEMORY_TOOL = [
                         "description": "Full updated long-term memory as markdown. Include all existing "
                         "facts plus new ones. Return unchanged if nothing new.",
                     },
+                    "important_snippets": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Extract 1-3 key specific facts or details from the current conversation "
+                        "for vector indexing. Keep each snippet under 200 chars.",
+                    },
                 },
-                "required": ["history_entry", "memory_update"],
+                "required": ["history_entry", "memory_update", "important_snippets"],
             },
         },
     }
 ]
 
 
+class VectorStore:
+    """Lightweight vector storage using numpy and JSON."""
+
+    def __init__(self, path: Path):
+        self.vectors_file = path / "vectors.npy"
+        self.meta_file = path / "metadata.json"
+        self.vectors: np.ndarray = np.array([], dtype=np.float32)
+        self.metadata: list[str] = []
+        self._load()
+
+    def _load(self):
+        if self.vectors_file.exists():
+            self.vectors = np.load(self.vectors_file).astype(np.float32)
+        if self.meta_file.exists():
+            with open(self.meta_file, "r", encoding="utf-8") as f:
+                self.metadata = json.load(f)
+
+    def _save(self):
+        np.save(self.vectors_file, self.vectors)
+        with open(self.meta_file, "w", encoding="utf-8") as f:
+            json.dump(self.metadata, f, ensure_ascii=False, indent=2)
+
+    def add(self, vectors: list[list[float]], texts: list[str]):
+        if not vectors:
+            return
+        new_vecs = np.array(vectors, dtype=np.float32)
+        if self.vectors.size == 0:
+            self.vectors = new_vecs
+        else:
+            self.vectors = np.vstack([self.vectors, new_vecs])
+        self.metadata.extend(texts)
+        self._save()
+
+    def search(self, query_vec: list[float], top_k: int = 5) -> list[tuple[str, float]]:
+        if self.vectors.size == 0:
+            return []
+        
+        q = np.array(query_vec, dtype=np.float32)
+        # Cosine similarity
+        norm_v = np.linalg.norm(self.vectors, axis=1)
+        norm_q = np.linalg.norm(q)
+        if norm_q == 0:
+            return []
+        
+        sims = np.dot(self.vectors, q) / (norm_v * norm_q)
+        top_indices = np.argsort(sims)[::-1][:top_k]
+        
+        return [(self.metadata[i], float(sims[i])) for i in top_indices if sims[i] > 0.3]
+
+
 class MemoryStore:
-    """Two-layer memory: MEMORY.md (long-term facts) + HISTORY.md (grep-searchable log)."""
+    """Three-layer memory: MEMORY.md (facts) + HISTORY.md (log) + VectorStore (RAG)."""
 
     def __init__(self, workspace: Path):
         self.memory_dir = ensure_dir(workspace / "memory")
         self.memory_file = self.memory_dir / "MEMORY.md"
         self.history_file = self.memory_dir / "HISTORY.md"
+        self.vector_store = VectorStore(self.memory_dir)
 
     def read_long_term(self) -> str:
         if self.memory_file.exists():
@@ -65,6 +123,26 @@ class MemoryStore:
     def get_memory_context(self) -> str:
         long_term = self.read_long_term()
         return f"## Long-term Memory\n{long_term}" if long_term else ""
+
+    async def get_relevant_history(self, provider: LLMProvider, query: str, top_k: int = 3) -> str:
+        """Search vector store for relevant snippets to inject into prompt."""
+        if not query or self.vector_store.vectors.size == 0:
+            return ""
+        
+        try:
+            vecs = await provider.embed([query])
+            if not vecs:
+                return ""
+            
+            hits = self.vector_store.search(vecs[0], top_k=top_k)
+            if not hits:
+                return ""
+            
+            snippets = "\n".join([f"- {text}" for text, score in hits])
+            return f"\n## Relevant Past Context\n{snippets}\n"
+        except Exception as e:
+            logger.error("Vector search failed: {}", e)
+            return ""
 
     async def consolidate(
         self,
@@ -148,6 +226,13 @@ class MemoryStore:
                     update = json.dumps(update, ensure_ascii=False)
                 if update != current_memory:
                     self.write_long_term(update)
+            
+            if snippets := args.get("important_snippets"):
+                if isinstance(snippets, list) and snippets:
+                    logger.info("Vector indexing {} snippets", len(snippets))
+                    vecs = await provider.embed(snippets)
+                    if vecs:
+                        self.vector_store.add(vecs, snippets)
 
             session.last_consolidated = 0 if archive_all else len(session.messages) - keep_count
             logger.info("Memory consolidation done: {} messages, last_consolidated={}", len(session.messages), session.last_consolidated)

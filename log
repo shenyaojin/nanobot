@@ -1,0 +1,21 @@
+Looking in indexes: http://mirrors.tencentyun.com/pypi/simple
+Obtaining file:///home/ubuntu/projects/nanobot
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Installing backend dependencies: started
+  Installing backend dependencies: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting chardet<6.0.0,>=3.0.2 (from nanobot-ai==0.1.4.post4)
+  Using cached http://mirrors.tencentyun.com/pypi/packages/38/6f/f5fbc992a329ee4e0f288c1fe0e2ad9485ed064cac731ed2fe47dcc38cbf/chardet-5.2.0-py3-none-any.whl (199 kB)
+Collecting croniter<7.0.0,>=6.0.0 (from nanobot-ai==0.1.4.post4)
+  Using cached http://mirrors.tencentyun.com/pypi/packages/07/4b/290b4c3efd6417a8b0c284896de19b1d5855e6dbdb97d2a35e68fa42de85/croniter-6.0.0-py2.py3-none-any.whl (25 kB)
+Collecting dingtalk-stream<1.0.0,>=0.24.0 (from nanobot-ai==0.1.4.post4)
+  Using cached http://mirrors.tencentyun.com/pypi/packages/4c/44/102dede3f371277598df6aa9725b82e3add068c729333c7a5dbc12764579/dingtalk_stream-0.24.3-py3-none-any.whl (27 kB)
+Collecting httpx<1.0.0,>=0.28.0 (from nanobot-ai==0.1.4.post4)
+  Using cached http://mirrors.tencentyun.com/pypi/packages/2a/39/e50c7c3a983047577ee07d2a9e53faf5a69493943ec3f6a384bdc792deb2/httpx-0.28.1-py3-none-any.whl (73 kB)
+INFO: pip is looking at multiple versions of nanobot-ai to determine which version is compatible with other requirements. This could take a while.

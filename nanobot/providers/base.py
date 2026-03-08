@@ -130,3 +130,17 @@ class LLMProvider(ABC):
     def get_default_model(self) -> str:
         """Get the default model for this provider."""
         pass
+
+    @abstractmethod
+    async def embed(self, texts: list[str], model: str | None = None) -> list[list[float]]:
+        """
+        Generate embeddings for a list of texts.
+
+        Args:
+            texts: List of strings to embed.
+            model: Optional embedding model identifier.
+
+        Returns:
+            List of embedding vectors (floats).
+        """
+        pass
