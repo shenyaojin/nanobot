@@ -1,0 +1,41 @@
+name: nanobot
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.11
+  - numpy>=2.0.0
+  - scipy>=1.13.0
+  - pandas>=2.2.0
+  - scikit-learn>=1.5.0
+  - ccxt>=4.2.0
+  - typer>=0.20.0
+  - litellm>=1.81.5
+  - pydantic>=2.12.0
+  - pydantic-settings>=2.12.0
+  - websockets>=16.0
+  - websocket-client>=1.9.0
+  - httpx>=0.28.0
+  - loguru>=0.7.3
+  - readability-lxml>=0.8.4
+  - rich>=14.0.0
+  - croniter>=6.0.0
+  - msgpack-python>=1.1.0
+  - prompt-toolkit>=3.0.50
+  - chardet>=3.0.2
+  - openai>=2.8.0
+  - pip
+  - pip:
+      - oauth-cli-kit>=0.1.3
+      - dingtalk-stream>=0.24.0
+      - python-telegram-bot[socks]>=22.6
+      - lark-oapi>=1.5.0
+      - socksio>=1.0.0
+      - python-socketio>=5.16.0
+      - slack-sdk>=3.39.0
+      - slackify-markdown>=0.2.0
+      - qq-botpy>=1.2.0
+      - python-socks[asyncio]>=2.8.0
+      - mcp>=1.26.0
+      - json-repair>=0.57.0
+      - .

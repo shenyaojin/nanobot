@@ -421,10 +421,15 @@ class AgentLoop:
             if isinstance(message_tool, MessageTool):
                 message_tool.start_turn()
 
-        history = session.get_history(max_messages=0)
+        history = session.get_history(max_messages=self.memory_window)
+        
+        # Inject relevant vector memory snippets (RAG)
+        mem = MemoryStore(self.workspace)
+        rag_context = await mem.get_relevant_history(self.provider, msg.content)
+        
         initial_messages = self.context.build_messages(
             history=history,
-            current_message=msg.content,
+            current_message=rag_context + msg.content if rag_context else msg.content,
             media=msg.media if msg.media else None,
             channel=msg.channel, chat_id=msg.chat_id,
         )

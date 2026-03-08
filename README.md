@@ -138,6 +138,15 @@ cd nanobot
 pip install -e .
 ```
 
+**Install with [Conda](https://docs.conda.io/en/latest/)** (recommended for scientific environments)
+
+```bash
+git clone https://github.com/HKUDS/nanobot.git
+cd nanobot
+conda env create -f environment.yml
+conda activate nanobot
+```
+
 **Install with [uv](https://github.com/astral-sh/uv)** (stable, fast)
 
 ```bash
