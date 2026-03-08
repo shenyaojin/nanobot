@@ -1236,3 +1236,5 @@ PRs welcome! The codebase is intentionally small and readable. 🤗
 <p align="center">
   <sub>nanobot is for educational, research, and technical exchange purposes only</sub>
 </p>
+
+From fork author: 掺了点东西，让它和crypto有更好的相性（笑）。--Jin
