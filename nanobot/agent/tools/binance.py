@@ -13,7 +13,7 @@ class BinanceTool(Tool):
     Supports spot and COIN-M inverse futures.
     """
 
-    def __init__(self, sandbox_mode: bool = True, username: str = 'default'):
+    def __init__(self, sandbox_mode: bool = False, username: str = 'default'):
         self._sandbox_mode = sandbox_mode
         self._username = username
         self._exchange = None

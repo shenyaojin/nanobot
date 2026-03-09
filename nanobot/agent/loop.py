@@ -127,7 +127,7 @@ class AgentLoop:
         self.tools.register(WebSearchTool(api_key=self.brave_api_key, proxy=self.web_proxy))
         self.tools.register(WebFetchTool(proxy=self.web_proxy))
         self.tools.register(BinanceTool(
-            sandbox_mode=os.environ.get("BINANCE_USE_TESTNET", "true").lower() == "true"
+            sandbox_mode=os.environ.get("BINANCE_USE_TESTNET", "false").lower() == "true"
         ))
         self.tools.register(MessageTool(send_callback=self.bus.publish_outbound))
         self.tools.register(SpawnTool(manager=self.subagents))

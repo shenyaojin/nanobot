@@ -1237,4 +1237,6 @@ PRs welcome! The codebase is intentionally small and readable. 🤗
   <sub>nanobot is for educational, research, and technical exchange purposes only</sub>
 </p>
 
-From fork author: 掺了点东西，让它和crypto有更好的相性（笑）。--Jin
+Note from fork author: 
+- I adapt it to a crypto trading one.
+- The backend trading engine is from my private repo, so don't try to fork it for your own crypto trading. It will not work, and I apologize to you. :( 

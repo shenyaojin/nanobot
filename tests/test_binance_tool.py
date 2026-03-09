@@ -22,11 +22,13 @@ async def test_binance_tool_missing_import():
 async def test_binance_tool_missing_creds():
     # Ensure no BINANCE env vars exist
     with patch.dict(os.environ, {}, clear=True):
-        tool = BinanceTool(sandbox_mode=True)
-        # We need to mock the import since it's only available in oc_crypto env
-        with patch('coin_margined_fra.core.exchange.Exchange', MagicMock()):
-             result = await tool.execute(action="get_balances")
-             assert "Binance API credentials not found" in result
+        # Prevent it from finding any .env files
+        with patch('os.path.exists', return_value=False):
+            tool = BinanceTool(sandbox_mode=True)
+            # We need to mock the import since it's only available in oc_crypto env
+            with patch('coin_margined_fra.core.exchange.Exchange', MagicMock()):
+                 result = await tool.execute(action="get_balances")
+                 assert "Binance API credentials not found" in result
 
 @pytest.mark.asyncio
 async def test_binance_tool_param_validation():
