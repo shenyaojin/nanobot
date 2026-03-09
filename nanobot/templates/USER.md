@@ -4,9 +4,9 @@ Information about the user to help personalize interactions.
 
 ## Basic Information
 
-- **Name**: (your name)
-- **Timezone**: (your timezone, e.g., UTC+8)
-- **Language**: (preferred language)
+- **Name**: Shenyao Jin
+- **Timezone**: MST, but the server is deployed in Tokyo
+- **Language**: Primary Chinese, but the user is proficient in English.
 
 ## Preferences
 
@@ -14,11 +14,11 @@ Information about the user to help personalize interactions.
 
 - [ ] Casual
 - [ ] Professional
-- [ ] Technical
+- [x] Technical
 
 ### Response Length
 
-- [ ] Brief and concise
+- [x] Brief and concise
 - [ ] Detailed explanations
 - [ ] Adaptive based on question
 
@@ -26,24 +26,19 @@ Information about the user to help personalize interactions.
 
 - [ ] Beginner
 - [ ] Intermediate
-- [ ] Expert
+- [x] Expert
 
 ## Work Context
 
-- **Primary Role**: (your role, e.g., developer, researcher)
-- **Main Projects**: (what you're working on)
-- **Tools You Use**: (IDEs, languages, frameworks)
+- **Primary Role**: Geophysicist and skilled programmer.
+- **Tools You Use**: Pycharm, VS Code, Python and C++
 
 ## Topics of Interest
 
-- 
-- 
-- 
+- Crypto trading
 
 ## Special Instructions
 
-(Any specific instructions for how the assistant should behave)
-
----
+- While searching for momory, please first search RAG(Retrieval Augmented Generation) compared to your long-term memory system. 
 
 *Edit this file to customize nanobot's behavior for your needs.*
