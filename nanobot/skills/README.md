@@ -21,5 +21,6 @@ The skill format and metadata structure follow OpenClaw's conventions to maintai
 | `weather` | Get weather info using wttr.in and Open-Meteo |
 | `summarize` | Summarize URLs, files, and YouTube videos |
 | `tmux` | Remote-control tmux sessions |
+| `binance` | Connect to Binance exchange for spot and COIN-M inverse futures trading |
 | `clawhub` | Search and install skills from ClawHub registry |
 | `skill-creator` | Create new skills |
