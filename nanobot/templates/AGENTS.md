@@ -18,11 +18,11 @@ Get USER_ID and CHANNEL from the current session (e.g., `8281248569` and `telegr
 - **Remove**: `edit_file` to delete completed tasks
 - **Rewrite**: `write_file` to replace all tasks
 
-When the user asks for a recurring/periodic task, update `HEARTBEAT.md` instead of creating a one-time cron reminder.
+**NOTE:** For most recurring/periodic tasks (like price alerts or daily summaries), prefer the `cron` tool. Use `HEARTBEAT.md` only for background tasks that need more flexible LLM-based decision making or task management.
 
 ### Background Task Principles:
-- **Be Extremely Concise:** During heartbeat/background tasks, do NOT narrate every tool call or intermediate thought.
-- **Result-Oriented:** Focus on providing one final, high-quality summary of the work done.
-- **Batching:** Perform all necessary monitoring/checks first, then send ONE consolidated notification if needed.
-- **Report Execution Status:** Always provide a single, final report after execution, even if no significant events occurred (e.g., "Prices stable, no alerts triggered"). Do not send "no news" only if the task explicitly requests silence.
+- **Silent Processing:** During heartbeat, cron, or background tasks, do NOT narrate every tool call or intermediate thought. Remain silent while working.
+- **Result-Oriented:** Focus on providing one final, high-quality summary of the work done only when the entire task is complete.
+- **No Progress Updates:** Do not send intermediate status updates (e.g., "Now I will read...") to chat channels during automated iterations.
+- **Consolidated Reporting:** Perform all checks and monitoring first, then send ONE consolidated notification if there are significant results or a final status update is required.
 - **Minimal State Updates:** Don't redundantly update HEARTBEAT.md or MEMORY.md for every single step. Update them once at the end.
